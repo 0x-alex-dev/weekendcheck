@@ -102,6 +102,19 @@ Claims and individual receipts persist in the database. Long threads can yield b
 
 No real X posts are sent by automated tests.
 
+### X daily (growth helper)
+
+Admin → X daily is a read-only helper for daily X activity. It never posts, replies, likes or follows; all engagement is done by hand in the X app.
+
+- **Today:** posts and replies against daily goals, a streak (days both goals were hit), six daily quests, unique and new people replied to, the share of replies going to your top 10, the reply mix by account size against a target, and reply speed to Big/Star accounts (the parent post's time comes from its snowflake ID, so it costs nothing).
+- **Discover:** people who replied to or mentioned you but you never replied to, plus up to N new accounts a day from niche keyword search. Mark them Replied, Keep warm, or Skip; an account is never suggested twice, and replying to one clears it automatically.
+- **People:** the keep-warm list (anyone replied to on 3+ days in 14, plus pinned accounts), flagged after the quiet limit; and the week's top 10 regulars.
+- **Settings:** goals, timezone (days start at local midnight), size tiers (default Small < 1k, Middle 1k–10k, Big 10k–25k, Star 25k+), mix target, speed limits, keywords and daily cost caps.
+
+Counting rules: replies to yourself (thread continuations) count for neither goal; quotes count as posts; reposts are ignored. "New people" means the first reply since tracking began, so it is overcounted for the first week.
+
+It uses the same OAuth 1.0a keys as automatic posting (`X_POSTING_ENABLED` is not required) and runs only on production. A sync runs when the page opens or regains focus and the data is over 10 minutes old, or with Sync now (at most once a minute). The first sync backfills 7 days of posts and 3 days of mentions. X's pay-per-use API is billed per resource returned: your own posts and mentions at the owned-read rate ($0.001), keyword search posts at $0.005 (read 10 at a time, stopping once the day's target is met or the search cap is hit), and follower lookups at $0.01 (new accounts once, active contacts refreshed monthly, under a daily cap). The page shows an estimate from recorded reads; the real bill is in the X developer console. Data is stored in `weekendcheck.x_daily_*` tables (migration 003), separate from the editorial workspace.
+
 ## Deploy to Vercel with Supabase
 
 Keep the existing Vercel Next.js project. Use the default `npm run build` build command. Vercel hosts the site and API; Supabase stores the database and media.

@@ -30,7 +30,7 @@ export function AdminShell({ initial, xConnected, children }: { initial: Editori
     } catch (error) { setError(error instanceof Error ? error.message : "Unable to save."); return null; }
     finally { saving.current = false; setBusy(false); }
   }
-  const navigation = [["/admin", "Overview"], ["/admin/weeks", "Weeks"], ["/admin/projects", "Projects"], ["/admin/reviews", "Reviews"], ["/admin/schedule", "Schedule"], ["/admin/messages", "Messages"], ["/admin/settings", "Settings"]];
+  const navigation = [["/admin", "Overview"], ["/admin/weeks", "Weeks"], ["/admin/projects", "Projects"], ["/admin/reviews", "Reviews"], ["/admin/schedule", "Schedule"], ["/admin/x-daily", "X daily"], ["/admin/messages", "Messages"], ["/admin/settings", "Settings"]];
   return <AdminContext.Provider value={{ data, busy, run, notify: setNotice, xConnected }}>
     <div className="desk">
       <header className="desk-header"><Mark /><span className="desk-header-label">Review desk</span><Link href="/" target="_blank">View site ↗</Link><button data-leave-form className="desk-link-button" disabled={busy} onClick={async () => {
